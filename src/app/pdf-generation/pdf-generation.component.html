@@ -1,0 +1,66 @@
+<div class="main-container">
+  <div class="card">
+    <h1 class="title">PDF Generation</h1>
+
+    <form (ngSubmit)="simulateEvent()" class="form-layout">
+      
+      <div class="field-group">
+        <label>HTML Content</label>
+        <textarea 
+          [(ngModel)]="formData.htmlContent" 
+          name="htmlContent"
+          placeholder="Write your post content here..."
+          class="custom-textarea">
+        </textarea>
+      </div>
+
+      <div class="field-group">
+        <label>Event Name</label>
+        <input 
+          type="text" 
+          [(ngModel)]="formData.eventName" 
+          name="eventName"
+          placeholder="Enter the event title..."
+          class="custom-input">
+      </div>
+
+      <div class="field-group">
+        <label>Event Description</label>
+        <textarea 
+          [(ngModel)]="formData.eventData" 
+          name="eventData"
+          placeholder="Add additional details or description..."
+          class="custom-textarea">
+        </textarea>
+      </div>
+
+      <div class="field-group">
+        <label>Select Design (Variant)</label>
+        <div class="theme-selector">
+          <div 
+            *ngFor="let theme of themes" 
+            class="theme-option"
+            [style.background-color]="theme.color"
+            [class.active]="formData.selectedTheme === theme.id"
+            (click)="formData.selectedTheme = theme.id; simulateEvent()">
+            <span class="theme-label">{{theme.label}}</span>
+          </div>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-button">
+        <span class="icon">⚡</span> Simulate Event
+      </button>
+
+    </form>
+
+    <div class="iframe-container">
+      <p class="iframe-label">Iframe Preview</p>
+      <iframe 
+        #myIframe 
+        src="assets/iframe-test.html" 
+        class="custom-iframe">
+      </iframe>
+    </div>
+  </div>
+</div>

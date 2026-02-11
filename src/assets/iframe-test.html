@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LinkedIn Carousel Preview</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root {
+            /* Theme variables controlled by the parent component */
+            --color-bg-slide: #f4f2ef;
+            --color-text-primary: #000000;
+            --color-separator: #0b67c2;
+        }
+
+        body, html { 
+            margin: 0; padding: 0; width: 100%; height: 100%; 
+            overflow: hidden; background-color: transparent; 
+        }
+
+        #linkedin-scene {
+            width: 1080px; height: 1080px;
+            position: absolute; top: 0; left: 0;
+            transform-origin: top left;
+        }
+
+        .ln-slide {
+            width: 1080px; height: 1080px;
+            background-color: var(--color-bg-slide);
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center; /* Total Centering */
+            text-align: center; font-family: 'Arial', sans-serif;
+            padding: 0 80px; box-sizing: border-box;
+        }
+
+        .ln-title {
+            color: var(--color-text-primary);
+            font-size: 75px; font-weight: 900;
+            text-transform: uppercase; margin: 0;
+            line-height: 1.1; width: 100%;
+        }
+
+        .ln-sep {
+            width: 200px; height: 12px;
+            background-color: var(--color-separator);
+            margin: 40px auto;
+        }
+
+        .ln-desc {
+            color: var(--color-text-primary);
+            font-size: 40px; line-height: 1.4;
+            margin: 0; font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div id="linkedin-scene">
+        <div class="ln-slide">
+            <div class="ln-title" id="preview-title">TITLE</div>
+            <div class="ln-sep"></div>
+            <div class="ln-desc" id="preview-content">Content goes here</div>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * Adjusts the scale of the 1080x1080 scene 
+         * based on the current width of the iframe.
+         */
+        function adaptScale() {
+            const scene = document.getElementById('linkedin-scene');
+            const scale = window.innerWidth / 1080;
+            scene.style.transform = `scale(${scale})`;
+        }
+
+        window.onresize = adaptScale;
+        window.onload = adaptScale;
+
+        /**
+         * Listens for messages from the Angular parent 
+         * to update text content and visual themes.
+         */
+        window.addEventListener('message', (event) => {
+            const data = event.data;
+            if (data.type === 'UPDATE_DESIGN' || data.type === 'PDF_DATA') {
+                const p = data.payload;
+                
+                // Update text content
+                document.getElementById('preview-title').innerText = p.eventName || '';
+                document.getElementById('preview-content').innerText = p.eventData || '';
+
+                // Map of available themes
+                const themes = {
+                    'default': { bg: '#f4f2ef', text: '#000000' },
+                    'blue':    { bg: '#3b82f6', text: '#ffffff' },
+                    'red':     { bg: '#ef4444', text: '#ffffff' },
+                    'yellow':  { bg: '#eab308', text: '#000000' },
+                    'green':   { bg: '#22c55e', text: '#ffffff' }
+                };
+
+                const theme = themes[p.selectedTheme] || themes.default;
+                
+                // Apply theme colors via CSS variables
+                document.documentElement.style.setProperty('--color-bg-slide', theme.bg);
+                document.documentElement.style.setProperty('--color-text-primary', theme.text);
+            }
+        });
+    </script>
+</body>
+</html>
