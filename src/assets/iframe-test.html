@@ -1,115 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>LinkedIn Carousel Preview</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    
-    <style>
-        :root {
-            --color-bg-slide: #f4f2ef;
-            --color-text-primary: #000000;
-            --color-separator: #0b67c2;
-        }
+  <meta charset="UTF-8">
+  <title>PDF Generation Preview</title>
+  <style>
+    body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
 
-        body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; background-color: transparent; }
+    #linkedin-scene {
+      width: 1080px; height: 1080px;
+      position: absolute; top: 0; left: 0;
+      transform-origin: top left;
+    }
 
-        #linkedin-scene {
-            width: 1080px; height: 1080px;
-            position: absolute; top: 0; left: 0;
-            transform-origin: top left;
-        }
+    .ln-slide {
+      width: 1080px; height: 1080px;
+      display: flex;
+      flex-direction: column;
+      padding: 90px;
+      box-sizing: border-box;
+      font-family: 'Arial', sans-serif;
+      transition: all 0.3s ease;
+    }
 
-        .ln-slide {
-            width: 1080px; height: 1080px;
-            background-color: var(--color-bg-slide);
-            display: flex;
-            flex-direction: column;
-            padding: 90px;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
+    /* --- POSITIONS --- */
+    .centered { align-items: center; justify-content: center; text-align: center; }
+    .top-left { align-items: flex-start; justify-content: flex-start; text-align: left; padding-top: 150px; }
+    .bottom-right { align-items: flex-end; justify-content: flex-end; text-align: right; padding-bottom: 150px; }
+    .magazine { align-items: flex-start; justify-content: flex-end; text-align: left; padding-bottom: 120px; }
 
-        /* --- 6 POSITION VARIATIONS --- */
-        
-        /* 1. Centered (Classic) */
-        .ln-slide.centered { align-items: center; justify-content: center; text-align: center; }
-        .centered .ln-sep { margin: 40px auto; }
+    /* --- ELEMENTS --- */
+    .ln-title {
+      font-weight: 900;
+      text-transform: uppercase;
+      margin: 0;
+      line-height: 1.1;
+      width: 100%;
+      /* Font size is controlled via JS */
+    }
 
-        /* 2. Top Aligned (Left) */
-        .ln-slide.top-left { align-items: flex-start; justify-content: flex-start; text-align: left; padding-top: 150px; }
-        .top-left .ln-sep { margin: 40px 0; }
+    .ln-sep {
+      width: 220px;
+      height: 14px;
+      background-color: #0b67c2;
+      margin: 40px 0;
+    }
+    .centered .ln-sep { margin: 40px auto; }
 
-        /* 3. Bottom Aligned (Right) */
-        .ln-slide.bottom-right { align-items: flex-end; justify-content: flex-end; text-align: right; padding-bottom: 150px; }
-        .bottom-right .ln-sep { margin: 40px 0 40px auto; }
-
-        /* 4. Split Middle (Title Left, Content Right) */
-        .ln-slide.split-middle { align-items: flex-start; justify-content: center; text-align: left; }
-        .split-middle .ln-desc { align-self: flex-end; text-align: right; margin-top: 20px; width: 80%; }
-        .split-middle .ln-sep { margin: 40px 0; }
-
-        /* 5. Modern Magazine (Title at bottom) */
-        .ln-slide.magazine { align-items: flex-start; justify-content: flex-end; text-align: left; padding-bottom: 120px; }
-        .magazine .ln-title { font-size: 100px; order: 2; }
-        .magazine .ln-desc { order: 1; margin-bottom: 20px; opacity: 0.8; }
-        .magazine .ln-sep { order: 1; margin: 20px 0; }
-
-        /* 6. High Impact (Massive Title Middle) */
-        .ln-slide.high-impact { align-items: center; justify-content: center; text-align: center; }
-        .high-impact .ln-title { font-size: 140px; line-height: 0.9; margin-bottom: 10px; }
-        .high-impact .ln-desc { display: none; } /* Focus only on Title */
-        .high-impact .ln-sep { width: 400px; }
-
-        /* Typography */
-        .ln-title { color: var(--color-text-primary); font-size: 85px; font-weight: 900; text-transform: uppercase; margin: 0; line-height: 1.1; width: 100%; }
-        .ln-sep { width: 220px; height: 14px; background-color: var(--color-separator); flex-shrink: 0; }
-        .ln-desc { color: var(--color-text-primary); font-size: 44px; line-height: 1.4; margin: 0; font-weight: 500; }
-    </style>
+    .ln-desc {
+      font-size: 40px;
+      line-height: 1.4;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
 
-    <div id="linkedin-scene">
-        <div class="ln-slide centered" id="slide-container">
-            <div class="ln-title" id="preview-title">TITLE</div>
-            <div class="ln-sep"></div>
-            <div class="ln-desc" id="preview-content">Your content will appear here.</div>
-        </div>
-    </div>
+<div id="linkedin-scene">
+  <div class="ln-slide centered" id="slide-container">
+    <div class="ln-title" id="preview-title">TITLE</div>
+    <div class="ln-sep" id="preview-sep"></div>
+    <div class="ln-desc" id="preview-content">Description text here...</div>
+  </div>
+</div>
 
-    <script>
-        function adaptScale() {
-            const scene = document.getElementById('linkedin-scene');
-            const scale = window.innerWidth / 1080;
-            scene.style.transform = `scale(${scale})`;
-        }
-        window.onresize = adaptScale;
-        window.onload = adaptScale;
+<script>
+  /**
+   * Adjusts the scale of the 1080px canvas to fit the current iframe width
+   */
+  function adaptScale() {
+    const scene = document.getElementById('linkedin-scene');
+    const scale = window.innerWidth / 1080;
+    scene.style.transform = `scale(${scale})`;
+  }
 
-        window.addEventListener('message', (event) => {
-            const data = event.data;
-            if (data.type === 'UPDATE_DESIGN') {
-                const p = data.payload;
-                document.getElementById('preview-title').innerText = p.eventName || 'TITLE';
-                document.getElementById('preview-content').innerText = p.eventData || 'Content goes here';
+  window.onresize = adaptScale;
+  window.onload = adaptScale;
 
-                const container = document.getElementById('slide-container');
-                container.className = `ln-slide ${p.selectedLayout || 'centered'}`;
+  /**
+   * Listens for messages from the Angular parent component
+   */
+  window.addEventListener('message', (event) => {
+    const p = event.data.payload;
+    if (!p) return;
 
-                const themes = {
-                    'default': { bg: '#f4f2ef', text: '#000000' },
-                    'blue':    { bg: '#3b82f6', text: '#ffffff' },
-                    'red':     { bg: '#ef4444', text: '#ffffff' },
-                    'yellow':  { bg: '#eab308', text: '#000000' },
-                    'green':   { bg: '#22c55e', text: '#ffffff' }
-                };
-                const theme = themes[p.selectedTheme] || themes.default;
-                document.documentElement.style.setProperty('--color-bg-slide', theme.bg);
-                document.documentElement.style.setProperty('--color-text-primary', theme.text);
-            }
-        });
-    </script>
+    const container = document.getElementById('slide-container');
+    const title = document.getElementById('preview-title');
+    const content = document.getElementById('preview-content');
+
+    // 1. UPDATE CONTENT
+    title.innerText = p.eventName || 'TITLE';
+    content.innerText = p.eventData || '';
+
+    // 2. UPDATE POSITION
+    container.className = `ln-slide ${p.selectedLayout || 'centered'}`;
+
+    // 3. UPDATE TYPOGRAPHY
+    // Applying the unit 'px' is crucial for the browser to render the font-size change
+    title.style.fontSize = (p.fontSize || 85) + 'px';
+    title.style.fontFamily = p.fontFamily || 'Arial';
+    title.style.color = p.textColor || '#000000';
+    content.style.color = p.textColor || '#000000';
+
+    // 4. UPDATE BACKGROUND (SOLID OR GRADIENT)
+    if (p.useGradient) {
+      container.style.background = `linear-gradient(135deg, ${p.color1}, ${p.color2})`;
+    } else {
+      container.style.background = p.color1;
+    }
+  });
+</script>
 </body>
 </html>

@@ -1,56 +1,65 @@
 <div class="main-container">
   <div class="card">
-    <h1 class="title">PDF Generation</h1>
+    <h1 class="title">Design Configuration</h1>
 
     <form (ngSubmit)="simulateEvent()" class="form-layout">
-      
-      <div class="field-group">
-        <label>HTML Content</label>
-        <textarea 
-          [(ngModel)]="formData.htmlContent" 
-          name="htmlContent"
-          placeholder="Write your post content here..."
-          class="custom-textarea">
-        </textarea>
-      </div>
 
       <div class="field-group">
-        <label>Event Name</label>
-        <input 
-          type="text" 
-          [(ngModel)]="formData.eventName" 
-          name="eventName"
-          placeholder="Enter the event title..."
-          class="custom-input">
+        <label>Event Name (Title)</label>
+        <input type="text" [(ngModel)]="formData.eventName" name="eventName"
+               (input)="simulateEvent()" placeholder="Enter title..." class="custom-input">
       </div>
 
       <div class="field-group">
         <label>Event Description</label>
-        <textarea 
-          [(ngModel)]="formData.eventData" 
-          name="eventData"
-          placeholder="Add additional details or description..."
-          class="custom-textarea">
+        <textarea [(ngModel)]="formData.eventData" name="eventData"
+                  (input)="simulateEvent()" placeholder="Enter description..." class="custom-textarea">
         </textarea>
       </div>
 
-
-      <div class="field-group">
-        <label>Select Color Theme</label>
-        <div class="theme-selector">
-          <div *ngFor="let theme of themes" class="theme-option" 
-              [style.background-color]="theme.color"
-              [class.active]="formData.selectedTheme === theme.id"
-              (click)="formData.selectedTheme = theme.id; simulateEvent()">
-            <span class="theme-label">{{theme.label}}</span>
+      <div class="config-section">
+        <div class="section-header">
+          <label class="section-label">Color configuration</label>
+          <div class="gradient-toggle">
+            <input type="checkbox" id="gradToggle" [(ngModel)]="formData.useGradient" name="useGradient" (change)="simulateEvent()">
+            <label for="gradToggle">Use Gradient</label>
           </div>
+        </div>
+
+        <div class="color-controls">
+          <div class="picker-item">
+            <span>Background Color</span>
+            <input type="color" [(ngModel)]="formData.color1" name="color1" (input)="simulateEvent()">
+          </div>
+          <div class="picker-item" *ngIf="formData.useGradient">
+            <span>Gradient Color</span>
+            <input type="color" [(ngModel)]="formData.color2" name="color2" (input)="simulateEvent()">
+          </div>
+          <div class="picker-item">
+            <span>Text Color</span>
+            <input type="color" [(ngModel)]="formData.textColor" name="textColor" (input)="simulateEvent()">
+          </div>
+        </div>
+      </div>
+
+      <div class="config-grid">
+        <div class="field-group">
+          <label>Font Size: {{formData.fontSize}}px</label>
+          <input type="range" min="40" max="150" [(ngModel)]="formData.fontSize" name="fontSize" (input)="simulateEvent()" class="custom-range">
+        </div>
+
+        <div class="field-group">
+          <label>Font Family</label>
+          <select [(ngModel)]="formData.fontFamily" name="fontFamily" (change)="simulateEvent()" class="custom-input">
+            <option *ngFor="let font of fonts" [value]="font">{{font}}</option>
+          </select>
         </div>
       </div>
 
       <div class="field-group">
         <label>Select Position / Layout</label>
         <div class="layout-selector">
-          <button type="button" *ngFor="let layout of layouts" 
+          <button type="button" *ngFor="let layout of layouts"
                   class="layout-btn"
                   [class.active]="formData.selectedLayout === layout.id"
                   (click)="formData.selectedLayout = layout.id; simulateEvent()">
@@ -67,11 +76,7 @@
 
     <div class="iframe-container">
       <p class="iframe-label">Iframe Preview</p>
-      <iframe 
-        #myIframe 
-        src="assets/iframe-test.html" 
-        class="custom-iframe">
-      </iframe>
+      <iframe #myIframe src="assets/iframe-test.html" class="custom-iframe"></iframe>
     </div>
   </div>
 </div>
