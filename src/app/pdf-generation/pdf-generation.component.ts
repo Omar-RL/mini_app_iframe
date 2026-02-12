@@ -1,15 +1,21 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { DesignSettingsComponent } from './design-settings.component';
 
 @Component({
   selector: 'app-pdf-generation',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    DesignSettingsComponent
+  ],
   templateUrl: './pdf-generation.component.html',
   styleUrl: './pdf-generation.component.css'
 })
 export class PdfGenerationComponent {
+  showModal: boolean = false;
   @ViewChild('myIframe') iframe!: ElementRef;
 
   fonts = ['Arial', 'Verdana', 'Georgia', 'Montserrat', 'Roboto', 'Playfair Display'];
@@ -22,14 +28,17 @@ export class PdfGenerationComponent {
   ];
 
   formData = {
-    eventName: 'Your Amazing Title',
-    eventData: 'This is the description that appears on your slide.',
+    eventName: 'Example Title',
+    eventData: 'This is the description that appears on slide.',
     useGradient: false,
     color1: '#ffffff',
     color2: '#3b82f6',
-    textColor: '#000000',
-    fontSize: 80,
-    fontFamily: 'Arial',
+    titleColor: '#000000',
+    titleFontSize: 80,
+    titleFontFamily: 'Arial',
+    textColor: '#333333',
+    descFontSize: 24,
+    descFontFamily: 'Arial',
     selectedLayout: 'centered'
   };
 

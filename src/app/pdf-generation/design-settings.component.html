@@ -1,0 +1,59 @@
+<div class="config-container">
+  <div class="settings-group">
+    <h3 class="group-title">Background Color</h3>
+    <div class="gradient-toggle">
+      <input type="checkbox" id="gradToggle" [(ngModel)]="config.useGradient" (change)="onChange()">
+      <label for="gradToggle">Use Gradient</label>
+    </div>
+
+    <div class="color-row">
+      <div class="picker-wrap">
+        <span>Background Color</span>
+        <input type="color" [(ngModel)]="config.color1" (input)="onChange()">
+      </div>
+      <div class="picker-wrap" *ngIf="config.useGradient">
+        <span>Gradient Color</span>
+        <input type="color" [(ngModel)]="config.color2" (input)="onChange()">
+      </div>
+    </div>
+  </div>
+
+  <div class="settings-grid">
+
+    <div class="settings-column">
+      <h3 class="group-title underlined">Title Configuration</h3>
+      <div class="field">
+        <label>Title Color</label>
+        <input type="color" class="full-width-color" [(ngModel)]="config.titleColor" (input)="onChange()">
+      </div>
+      <div class="field">
+        <label>Font Size</label>
+        <input type="number" [(ngModel)]="config.titleFontSize" (input)="onChange()" class="minimal-input">
+      </div>
+      <div class="field">
+        <label>Font Family</label>
+        <select [(ngModel)]="config.titleFontFamily" (change)="onChange()" class="minimal-input">
+          <option *ngFor="let font of fonts" [value]="font">{{font}}</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="settings-column">
+      <h3 class="group-title underlined">Description Configuration</h3>
+      <div class="field">
+        <label>Text Color</label>
+        <input type="color" class="full-width-color" [(ngModel)]="config.textColor" (input)="onChange()">
+      </div>
+      <div class="field">
+        <label>Font Size</label>
+        <input type="number" [(ngModel)]="config.descFontSize" (input)="onChange()" class="minimal-input">
+      </div>
+      <div class="field">
+        <label>Font Family</label>
+        <select [(ngModel)]="config.descFontFamily" (change)="onChange()" class="minimal-input">
+          <option *ngFor="let font of fonts" [value]="font">{{font}}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>

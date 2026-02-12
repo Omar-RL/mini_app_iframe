@@ -2,110 +2,73 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>PDF Generation Preview</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Preview</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
   <style>
-    body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
-
-    #linkedin-scene {
-      width: 1080px; height: 1080px;
-      position: absolute; top: 0; left: 0;
-      transform-origin: top left;
-    }
-
-    .ln-slide {
-      width: 1080px; height: 1080px;
-      display: flex;
-      flex-direction: column;
-      padding: 90px;
-      box-sizing: border-box;
-      font-family: 'Arial', sans-serif;
-      transition: all 0.3s ease;
-    }
-
-    /* --- POSITIONS --- */
-    .centered { align-items: center; justify-content: center; text-align: center; }
-    .top-left { align-items: flex-start; justify-content: flex-start; text-align: left; padding-top: 150px; }
-    .bottom-right { align-items: flex-end; justify-content: flex-end; text-align: right; padding-bottom: 150px; }
-    .magazine { align-items: flex-start; justify-content: flex-end; text-align: left; padding-bottom: 120px; }
-
-    /* --- ELEMENTS --- */
-    .ln-title {
-      font-weight: 900;
-      text-transform: uppercase;
+    * {
       margin: 0;
-      line-height: 1.1;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
       width: 100%;
-      /* Font size is controlled via JS */
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: background 0.3s ease;
     }
-
-    .ln-sep {
-      width: 220px;
-      height: 14px;
-      background-color: #0b67c2;
-      margin: 40px 0;
+    .content {
+      text-align: center;
+      padding: 40px;
+      max-width: 90%;
     }
-    .centered .ln-sep { margin: 40px auto; }
-
-    .ln-desc {
-      font-size: 40px;
-      line-height: 1.4;
-      margin-top: 20px;
+    #title {
+      margin-bottom: 20px;
+      transition: all 0.3s ease;
+      font-weight: 700;
+    }
+    #description {
+      transition: all 0.3s ease;
+      line-height: 1.6;
     }
   </style>
 </head>
 <body>
-
-<div id="linkedin-scene">
-  <div class="ln-slide centered" id="slide-container">
-    <div class="ln-title" id="preview-title">TITLE</div>
-    <div class="ln-sep" id="preview-sep"></div>
-    <div class="ln-desc" id="preview-content">Description text here...</div>
-  </div>
+<div class="content">
+  <h1 id="title">Example Title</h1>
+  <p id="description">This is the description that appears on slide.</p>
 </div>
 
 <script>
-  /**
-   * Adjusts the scale of the 1080px canvas to fit the current iframe width
-   */
-  function adaptScale() {
-    const scene = document.getElementById('linkedin-scene');
-    const scale = window.innerWidth / 1080;
-    scene.style.transform = `scale(${scale})`;
-  }
+  window.addEventListener('message', function(event) {
+    if (event.data.type === 'UPDATE_DESIGN') {
+      const data = event.data.payload;
 
-  window.onresize = adaptScale;
-  window.onload = adaptScale;
+      // Update background
+      if (data.useGradient) {
+        document.body.style.background = `linear-gradient(135deg, ${data.color1}, ${data.color2})`;
+      } else {
+        document.body.style.background = data.color1;
+      }
 
-  /**
-   * Listens for messages from the Angular parent component
-   */
-  window.addEventListener('message', (event) => {
-    const p = event.data.payload;
-    if (!p) return;
+      // Update title
+      const titleEl = document.getElementById('title');
+      titleEl.textContent = data.eventName;
+      titleEl.style.color = data.titleColor;
+      titleEl.style.fontSize = data.titleFontSize + 'px';
+      titleEl.style.fontFamily = data.titleFontFamily;
 
-    const container = document.getElementById('slide-container');
-    const title = document.getElementById('preview-title');
-    const content = document.getElementById('preview-content');
-
-    // 1. UPDATE CONTENT
-    title.innerText = p.eventName || 'TITLE';
-    content.innerText = p.eventData || '';
-
-    // 2. UPDATE POSITION
-    container.className = `ln-slide ${p.selectedLayout || 'centered'}`;
-
-    // 3. UPDATE TYPOGRAPHY
-    // Applying the unit 'px' is crucial for the browser to render the font-size change
-    title.style.fontSize = (p.fontSize || 85) + 'px';
-    title.style.fontFamily = p.fontFamily || 'Arial';
-    title.style.color = p.textColor || '#000000';
-    content.style.color = p.textColor || '#000000';
-
-    // 4. UPDATE BACKGROUND (SOLID OR GRADIENT)
-    if (p.useGradient) {
-      container.style.background = `linear-gradient(135deg, ${p.color1}, ${p.color2})`;
-    } else {
-      container.style.background = p.color1;
+      // Update description
+      const descEl = document.getElementById('description');
+      descEl.textContent = data.eventData;
+      descEl.style.color = data.textColor;
+      descEl.style.fontSize = data.descFontSize + 'px';
+      descEl.style.fontFamily = data.descFontFamily;
     }
   });
 </script>

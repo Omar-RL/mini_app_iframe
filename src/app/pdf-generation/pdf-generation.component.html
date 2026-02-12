@@ -3,80 +3,47 @@
     <h1 class="title">Design Configuration</h1>
 
     <form (ngSubmit)="simulateEvent()" class="form-layout">
-
       <div class="field-group">
         <label>Event Name (Title)</label>
-        <input type="text" [(ngModel)]="formData.eventName" name="eventName"
-               (input)="simulateEvent()" placeholder="Enter title..." class="custom-input">
+        <input type="text" [(ngModel)]="formData.eventName" name="eventName" class="custom-input">
       </div>
 
       <div class="field-group">
         <label>Event Description</label>
-        <textarea [(ngModel)]="formData.eventData" name="eventData"
-                  (input)="simulateEvent()" placeholder="Enter description..." class="custom-textarea">
-        </textarea>
+        <textarea [(ngModel)]="formData.eventData" name="eventData" class="custom-textarea"></textarea>
       </div>
 
-      <div class="config-section">
-        <div class="section-header">
-          <label class="section-label">Color configuration</label>
-          <div class="gradient-toggle">
-            <input type="checkbox" id="gradToggle" [(ngModel)]="formData.useGradient" name="useGradient" (change)="simulateEvent()">
-            <label for="gradToggle">Use Gradient</label>
-          </div>
-        </div>
-
-        <div class="color-controls">
-          <div class="picker-item">
-            <span>Background Color</span>
-            <input type="color" [(ngModel)]="formData.color1" name="color1" (input)="simulateEvent()">
-          </div>
-          <div class="picker-item" *ngIf="formData.useGradient">
-            <span>Gradient Color</span>
-            <input type="color" [(ngModel)]="formData.color2" name="color2" (input)="simulateEvent()">
-          </div>
-          <div class="picker-item">
-            <span>Text Color</span>
-            <input type="color" [(ngModel)]="formData.textColor" name="textColor" (input)="simulateEvent()">
-          </div>
-        </div>
-      </div>
-
-      <div class="config-grid">
-        <div class="field-group">
-          <label>Font Size: {{formData.fontSize}}px</label>
-          <input type="range" min="40" max="150" [(ngModel)]="formData.fontSize" name="fontSize" (input)="simulateEvent()" class="custom-range">
-        </div>
-
-        <div class="field-group">
-          <label>Font Family</label>
-          <select [(ngModel)]="formData.fontFamily" name="fontFamily" (change)="simulateEvent()" class="custom-input">
-            <option *ngFor="let font of fonts" [value]="font">{{font}}</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="field-group">
-        <label>Select Position / Layout</label>
-        <div class="layout-selector">
-          <button type="button" *ngFor="let layout of layouts"
-                  class="layout-btn"
-                  [class.active]="formData.selectedLayout === layout.id"
-                  (click)="formData.selectedLayout = layout.id; simulateEvent()">
-            {{layout.label}}
-          </button>
-        </div>
-      </div>
-
-      <button type="submit" class="submit-button">
-        <span class="icon">⚡</span> Simulate Event
-      </button>
-
+      <button type="submit" class="submit-button">⚡ Simulate Event</button>
     </form>
 
     <div class="iframe-container">
-      <p class="iframe-label">Iframe Preview</p>
       <iframe #myIframe src="assets/iframe-test.html" class="custom-iframe"></iframe>
+    </div>
+
+    <button type="button" class="config-toggle-btn" (click)="showModal = true">
+      <span class="icon">🎨</span> Customize Design
+    </button>
+
+    <div class="modal-overlay" *ngIf="showModal" (click)="showModal = false">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Appearance Settings</h2>
+          <button class="close-btn" (click)="showModal = false">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <app-design-settings
+            [config]="formData"
+            [fonts]="fonts"
+            [layouts]="layouts"
+            (configChanged)="simulateEvent()">
+          </app-design-settings>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-primary" (click)="showModal = false">Done</button>
+        </div>
+      </div>
     </div>
   </div>
 </div>
