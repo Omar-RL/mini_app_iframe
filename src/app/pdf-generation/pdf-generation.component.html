@@ -34,17 +34,28 @@
         </textarea>
       </div>
 
+
       <div class="field-group">
-        <label>Select Design (Variant)</label>
+        <label>Select Color Theme</label>
         <div class="theme-selector">
-          <div 
-            *ngFor="let theme of themes" 
-            class="theme-option"
-            [style.background-color]="theme.color"
-            [class.active]="formData.selectedTheme === theme.id"
-            (click)="formData.selectedTheme = theme.id; simulateEvent()">
+          <div *ngFor="let theme of themes" class="theme-option" 
+              [style.background-color]="theme.color"
+              [class.active]="formData.selectedTheme === theme.id"
+              (click)="formData.selectedTheme = theme.id; simulateEvent()">
             <span class="theme-label">{{theme.label}}</span>
           </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Select Position / Layout</label>
+        <div class="layout-selector">
+          <button type="button" *ngFor="let layout of layouts" 
+                  class="layout-btn"
+                  [class.active]="formData.selectedLayout === layout.id"
+                  (click)="formData.selectedLayout = layout.id; simulateEvent()">
+            {{layout.label}}
+          </button>
         </div>
       </div>
 

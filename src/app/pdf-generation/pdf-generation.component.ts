@@ -21,29 +21,29 @@ export class PdfGenerationComponent {
     { id: 'green', label: 'GREEN', color: '#dcfce7' }
   ];
 
+  layouts = [
+    { id: 'centered', label: 'Centered' },
+    { id: 'top-left', label: 'Top Left' },
+    { id: 'bottom-right', label: 'Bottom Right' },
+    { id: 'split-middle', label: 'Split' },
+    { id: 'magazine', label: 'Magazine' },
+    { id: 'high-impact', label: 'Impact' }
+  ];
+
   formData = {
     htmlContent: '',
     eventName: '',
     eventData: '',
-    selectedTheme: 'default' // Default theme selection
+    selectedTheme: 'default',
+    selectedLayout: 'centered'
   };
 
-  /**
-   * Sends the current form data and selected theme to the iframe
-   * to update the preview in real-time.
-   */
+  // SimulateEvent
   simulateEvent() {
-    if (!this.iframe) return;
-
     const iframeWindow = this.iframe.nativeElement.contentWindow;
-    
     iframeWindow.postMessage({
       type: 'UPDATE_DESIGN',
-      payload: {
-        ...this.formData,
-        // Ensure the current theme is explicitly sent
-        selectedTheme: this.formData.selectedTheme 
-      }
+      payload: { ...this.formData }
     }, '*');
   }
 }
