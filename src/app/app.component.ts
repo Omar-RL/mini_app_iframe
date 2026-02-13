@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { PdfGenerationComponent } from './pdf-generation/pdf-generation.component';
+import { SimulatePdfGeneratorComponent } from './pdf-generation/simulate-pdf-generator/simulate-pdf-generator';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [PdfGenerationComponent],
-  template: `<app-pdf-generation></app-pdf-generation>`
+  imports: [SimulatePdfGeneratorComponent],
+  template: `<simulate-pdf-generator></simulate-pdf-generator>`
 })
 export class AppComponent {}

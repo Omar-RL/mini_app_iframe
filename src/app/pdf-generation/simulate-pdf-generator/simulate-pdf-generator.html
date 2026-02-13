@@ -17,7 +17,7 @@
     </form>
 
     <div class="iframe-container">
-      <app-pdf-preview></app-pdf-preview>
+      <pdf-preview></pdf-preview>
     </div>
 
     <button type="button" class="config-toggle-btn" (click)="showModal = true">
@@ -32,12 +32,11 @@
         </div>
 
         <div class="modal-body">
-          <app-design-settings
-            [config]="formData"
-            [fonts]="fonts"
-            [layouts]="layouts"
-            (configChanged)="simulateEvent()">
-          </app-design-settings>
+          <pdf-design-settings
+          [config]="formData"
+          [fonts]="fonts"
+          (configChanged)="simulateEvent()">
+        </pdf-design-settings>
         </div>
 
         <div class="modal-footer">

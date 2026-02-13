@@ -1,34 +1,34 @@
 import { Component, AfterViewInit, PLATFORM_ID, Inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DesignPdfSettingsComponent } from '../design-pdf-settings/design-pdf-settings';
+
+import { PdfDesignSettingsComponent } from '../design-pdf-settings/design-pdf-settings';
 import { PdfPreviewComponent } from '../pdf-preview/pdf-preview';
+import { PdfDesignConfig } from '../design-pdf-settings/design-pdf-settings';
 
 @Component({
-  selector: 'app-simulate-pdf-generator',
+  selector: 'simulate-pdf-generator',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    DesignPdfSettingsComponent,
+    PdfDesignSettingsComponent,
     PdfPreviewComponent
   ],
   templateUrl: './simulate-pdf-generator.html',
-  styleUrl: './simulate-pdf-generator.css'
+  styleUrls: ['./simulate-pdf-generator.css']
 })
-export class SimulatePdfGenerator implements AfterViewInit {
-  showModal: boolean = false;
+export class SimulatePdfGeneratorComponent implements AfterViewInit {
+
+  showModal = false;
 
   fonts = ['Arial', 'Verdana', 'Georgia', 'Montserrat', 'Roboto', 'Playfair Display'];
 
-  layouts = [
-    { id: 'centered', label: 'Centered' },
-    { id: 'top-left', label: 'Top Left' },
-    { id: 'bottom-right', label: 'Bottom Right' },
-    { id: 'magazine', label: 'Magazine' }
-  ];
-
-  formData = {
+  formData: PdfDesignConfig & {
+    eventName: string;
+    eventData: string;
+    selectedLayout: string;
+  } = {
     eventName: 'Example Title',
     eventData: 'This is the description that appears on slide.',
     useGradient: false,
@@ -46,23 +46,17 @@ export class SimulatePdfGenerator implements AfterViewInit {
   constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   ngAfterViewInit() {
-    // Only execute in browser
     if (isPlatformBrowser(this.platformId)) {
-      setTimeout(() => {
-        this.simulateEvent();
-      }, 100);
+      setTimeout(() => this.simulateEvent(), 100);
     }
   }
 
   simulateEvent() {
-    // Only execute in browser
-    if (isPlatformBrowser(this.platformId)) {
-      console.log('Simulating event with data:', this.formData);
+    if (!isPlatformBrowser(this.platformId)) return;
 
-      window.postMessage({
-        type: 'UPDATE_DESIGN',
-        payload: { ...this.formData }
-      }, '*');
-    }
+    window.postMessage({
+      type: 'UPDATE_DESIGN',
+      payload: { ...this.formData }
+    }, '*');
   }
 }

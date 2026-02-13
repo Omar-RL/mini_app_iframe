@@ -1,5 +1,4 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { PdfGenerationComponent } from './app/pdf-generation/pdf-generation.component';
+import { AppComponent } from './app/app.component';
 
-bootstrapApplication(PdfGenerationComponent)
-  .catch(err => console.error(err));
+bootstrapApplication(AppComponent);

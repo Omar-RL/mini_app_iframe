@@ -17,6 +17,10 @@
   border-radius: 24px;
   box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
   padding: 40px;
+  -webkit-border-radius: 24px;
+  -moz-border-radius: 24px;
+  -ms-border-radius: 24px;
+  -o-border-radius: 24px;
 }
 
 .title {
@@ -130,15 +134,18 @@
 }
 
 /* 6. Iframe Preview Section */
-.iframe-container {
-  margin-top: 32px;
-  border-top: 1px solid #f1f5f9;
-  padding-top: 24px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 24px;
+.iframe-container pdf-preview {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  max-width: 500px;
+  border: 1px solid #e2e8f0;
+  border-radius: 20px;
+  background-color: #f8fafc;
+  box-shadow: 0 15px 30px -10px rgba(0,0,0,0.1);
+  overflow: hidden;
+  display: block;
 }
+
 
 .iframe-label {
   align-self: flex-start;
