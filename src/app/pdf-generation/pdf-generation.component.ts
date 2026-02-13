@@ -1,7 +1,8 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, AfterViewInit, PLATFORM_ID, Inject } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DesignSettingsComponent } from './design-settings.component';
+import { PdfPreviewComponent } from './pdf-preview.component';
 
 @Component({
   selector: 'app-pdf-generation',
@@ -9,14 +10,14 @@ import { DesignSettingsComponent } from './design-settings.component';
   imports: [
     CommonModule,
     FormsModule,
-    DesignSettingsComponent
+    DesignSettingsComponent,
+    PdfPreviewComponent
   ],
   templateUrl: './pdf-generation.component.html',
   styleUrl: './pdf-generation.component.css'
 })
-export class PdfGenerationComponent {
+export class PdfGenerationComponent implements AfterViewInit {
   showModal: boolean = false;
-  @ViewChild('myIframe') iframe!: ElementRef;
 
   fonts = ['Arial', 'Verdana', 'Georgia', 'Montserrat', 'Roboto', 'Playfair Display'];
 
@@ -42,12 +43,26 @@ export class PdfGenerationComponent {
     selectedLayout: 'centered'
   };
 
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+
+  ngAfterViewInit() {
+    // Only execute in browser
+    if (isPlatformBrowser(this.platformId)) {
+      setTimeout(() => {
+        this.simulateEvent();
+      }, 100);
+    }
+  }
+
   simulateEvent() {
-    if (!this.iframe) return;
-    const iframeWindow = this.iframe.nativeElement.contentWindow;
-    iframeWindow.postMessage({
-      type: 'UPDATE_DESIGN',
-      payload: { ...this.formData }
-    }, '*');
+    // Only execute in browser
+    if (isPlatformBrowser(this.platformId)) {
+      console.log('Simulating event with data:', this.formData);
+
+      window.postMessage({
+        type: 'UPDATE_DESIGN',
+        payload: { ...this.formData }
+      }, '*');
+    }
   }
 }
