@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 @Component({
-  selector: 'app-design-settings',
-  standalone: true, // MUST BE TRUE
-  imports: [CommonModule, FormsModule], // MUST INCLUDE THESE
-  templateUrl: './design-settings.component.html',
-  styleUrls: ['./design-settings.component.css']
+  selector: 'app-design-pdf-settings',
+  standalone: true,
+  imports: [CommonModule, FormsModule],
+  templateUrl: './design-pdf-settings.html',
+  styleUrls: ['./design-pdf-settings.css']
 })
-export class DesignSettingsComponent {
+export class DesignPdfSettingsComponent {
   @Input() config: any;
   @Input() fonts: string[] = [];
   @Input() layouts: any[] = [];

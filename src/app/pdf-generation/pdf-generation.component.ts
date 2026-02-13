@@ -1,20 +1,20 @@
 import { Component, AfterViewInit, PLATFORM_ID, Inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { DesignSettingsComponent } from './design-settings.component';
-import { PdfPreviewComponent } from './pdf-preview.component';
+import { DesignPdfSettingsComponent } from '../design-pdf-settings/design-pdf-settings';
+import { PdfPreviewComponent } from '../pdf-preview/pdf-preview';
 
 @Component({
-  selector: 'app-pdf-generation',
+  selector: 'app-simulate-pdf-generator',
   standalone: true,
   imports: [
     CommonModule,
     FormsModule,
-    DesignSettingsComponent,
+    DesignPdfSettingsComponent,
     PdfPreviewComponent
   ],
-  templateUrl: './pdf-generation.component.html',
-  styleUrl: './pdf-generation.component.css'
+  templateUrl: './simulate-pdf-generator.html',
+  styleUrl: './simulate-pdf-generator.css'
 })
 export class PdfGenerationComponent implements AfterViewInit {
   showModal: boolean = false;
