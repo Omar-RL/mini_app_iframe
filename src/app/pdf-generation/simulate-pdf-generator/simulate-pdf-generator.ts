@@ -16,7 +16,7 @@ import { PdfPreviewComponent } from '../pdf-preview/pdf-preview';
   templateUrl: './simulate-pdf-generator.html',
   styleUrl: './simulate-pdf-generator.css'
 })
-export class PdfGenerationComponent implements AfterViewInit {
+export class SimulatePdfGenerator implements AfterViewInit {
   showModal: boolean = false;
 
   fonts = ['Arial', 'Verdana', 'Georgia', 'Montserrat', 'Roboto', 'Playfair Display'];
